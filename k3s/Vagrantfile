@@ -1,0 +1,40 @@
+DISTRO = (ENV['DISTRO'] || "ubuntu2204")
+BOX_REPO = (ENV['BOX_REPO'] || "generic")
+NODE_NUM = (ENV['NUM_NODES'] || 0).to_i
+NODE_CPUS = (ENV['NODE_CPUS'] || 1).to_i
+MASTER_CPUS = (ENV['MASTER_CPUS'] || 2).to_i
+MASTER_MEMORY = (ENV['MASTER_MEMORY'] || 4096).to_i
+NODE_MEMORY = (ENV['NODE_MEMORY'] || 2048).to_i
+NETWORK_PREFIX = ENV['IP_START'] || "192.168.100"
+
+
+Vagrant.configure("2") do |config|
+ 
+  config.vm.box = "#{BOX_REPO}/#{DISTRO}"
+  config.vm.synced_folder ".", "/vagrant_data"
+
+  config.vm.define "master"  do  |master|
+      master.vm.provider "libvirt" do |vm|
+          vm.cpus= MASTER_CPUS
+          vm.memory=MASTER_MEMORY
+        end
+      master.vm.hostname = "master-node"
+      master.vm.network "private_network", ip:  "#{NETWORK_PREFIX}.#{10}"
+      master.vm.provision "shell", path: "scripts/common.sh" , env: {"IP_START" =>NETWORK_PREFIX, "NODES" => NODE_NUM}
+      master.vm.provision "shell", path: "scripts/master.sh"
+    end
+
+    (1..NODE_NUM).each do |i|
+          config.vm.define "worker-node-#{i}" do |node|
+            node.vm.provider "libvirt" do |vm|
+                vm.cpus = NODE_CPUS
+                vm.memory = NODE_MEMORY
+              end
+            node.vm.hostname = "worker-node-#{NODE_NUM}"
+            node.vm.network "private_network", ip: "#{NETWORK_PREFIX}.#{20+NODE_NUM}"
+            node.vm.provision "shell", path: "scripts/common.sh" , env: {"IP_START" =>NETWORK_PREFIX, "NODES" => NODE_NUM}
+            node.vm.provision "shell", path: "scripts/node.sh" 
+          end
+    end
+end
+
