@@ -9,7 +9,8 @@
 
 # check if exists
 
+
 echo "$IP_START.10  master-node" >> /etc/hosts
 for i in $(seq 1 $NODES); do
-    echo  "$IP_START.$(($i+20)) worker-node-$1" >> /etc/hosts
+    echo  "$IP_START.$(($i+20)) worker-node-$i" >> /etc/hosts
 done
