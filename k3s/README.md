@@ -18,8 +18,14 @@ this will work from project dir
 you can export to env and kubectl based on folder location
 `KUBECONFIG=./data/k3s.yaml kubectl get nodes`
 
+# Dashboard
+`KUBECONFIG=./data/k3s.yaml kubectl proxy`
+`http://localhost:8001/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/`
+
+token stored in data/dashboard-token
 ### To destroy
 `sudo vagrant destroy `
+
 #### remove contents from data folder
 `rm -rf data/*` 
 
