@@ -13,7 +13,16 @@ https://vagrant-libvirt.github.io/vagrant-libvirt/installation.html#ubuntu--debi
  i'm using generic/ubuntu2004 becouse i've previusly downloaded in my machine
 `sudo DISTRO=ubuntu2004 NUM_NODES=2 vagrant up`
 
+### kubectl connection config can be found at data/k3s.yaml
+this will work from project dir
+you can export to env and kubectl based on folder location
+`KUBECONFIG=./data/k3s.yaml kubectl get nodes`
+
 ### To destroy
 `sudo vagrant destroy `
 #### remove contents from data folder
 `rm -rf data/*` 
+
+
+### warning
+script may only work in vagrant env need to update sudo/root permission if you using want to use outside 
