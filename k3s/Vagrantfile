@@ -21,7 +21,7 @@ Vagrant.configure("2") do |config|
       master.vm.hostname = "master-node"
       master.vm.network "private_network", ip:  "#{NETWORK_PREFIX}.#{10}"
       master.vm.provision "shell", path: "scripts/common.sh" , env: {"IP_START" =>NETWORK_PREFIX, "NODES" => NODE_NUM}
-      master.vm.provision "shell", path: "scripts/master.sh"
+      master.vm.provision "shell", path: "scripts/master.sh" , env: {"IP_MASTER" => "#{NETWORK_PREFIX}.#{10}" }
     end
 
     (1..NODE_NUM).each do |i|
